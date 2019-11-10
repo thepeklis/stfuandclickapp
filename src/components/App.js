@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { matchPath } from "react-router";
-import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter, Link } from "react-router-dom";
 import '../assets/styles/app.scss'
 import IndividualClicking from "./individual/IndividualClicking"
 import TeamClicking from "./team/TeamClicking"
@@ -12,12 +12,29 @@ class App extends Component {
     if (!localStorage.getItem('sessionID')) {
       localStorage.setItem('sessionID', String(Date.now()))
     }
+    this.props.fetchTeams(true, this.getTeamNameFromRoute())
+  }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.location !== prevProps.location) {
+      this.getTeamNameFromRoute()
+    }
+  }
+
+  getTeamNameFromRoute = () => {
     const match = matchPath(this.props.location.pathname, {
       path: "/:teamName",
     })
-    const teamName = match && match.params.teamName
-    this.props.fetchTeams(true, teamName)
+
+    if (match && match.params.teamName) {
+      const t = decodeURIComponent(match.params.teamName)
+      if (t !== this.props.myTeam.team) {
+        this.props.setTeamName(t)
+      }
+      return t
+    } else {
+      return undefined
+    }
   }
 
   handleClick = () => {
@@ -27,31 +44,38 @@ class App extends Component {
   }
 
   render() {
+
+    const { teams, myTeam, loading, error, setTeamName } = this.props
+
+    console.log("teams from props: ", teams)
+    console.log("myTeam from props: ", myTeam.team)
+
     return (
       <div className="app">
-        <div className="stripe">STFUANDCLICK.COM</div>
+        <div className="stripe">
+          <Link to='/'>STFUANDCLICK.COM</Link>
+        </div>
 
         <Switch>
           <Route exact path='/'>
             <IndividualClicking
-              teams={this.props.teams && this.props.teams.slice(0, 10)}
-              myTeam={this.props.myTeam}
-              loading={this.props.loading}
-              error={this.props.error}
-              setTeamName={this.props.setTeamName}
+              teams={teams && teams.slice(0, 10)}
+              myTeam={myTeam}
+              loading={loading}
+              error={error}
+              setTeamName={setTeamName}
               handleClick={this.handleClick}
             />
           </Route>
-          <Route path='/:teamName' render={(props) => {
-            return <TeamClicking
-                      myTeam={this.props.myTeam}
-                      teams={this.props.teams}
-                      handleClick={this.handleClick}
-                      loading={this.props.loading}
-                      error={this.props.error}
+          <Route path='/:teamName'>
+            <TeamClicking
+              myTeam={myTeam}
+              teams={teams}
+              handleClick={this.handleClick}
+              loading={loading}
+              error={error}
             />
-          }
-          }/>
+          </Route>
           <Redirect from='*' to='/' />
         </Switch>
 

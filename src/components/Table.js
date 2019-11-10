@@ -1,13 +1,16 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-function Table({ teams, loading, error, showExtraTeam, tableClass }) {
+function Table({ teams, loading, error, showExtraTeam, tableClass, highlightTeam }) {
 
   const listOfTeams = teams && teams.length > 1 && teams
     .sort((a, b) => a.order < b.order)
     .map((t, i) => (
-      <tr key={i}>
+      <tr key={i} className={ highlightTeam === t.team ? 'my-team' : "" }>
         <td>{t.order}</td>
-        <td>{t.team}</td>
+        <td>
+          { highlightTeam === t.team ? t.team : <Link to={`/${encodeURIComponent(t.team)}`}>{t.team}</Link> }
+        </td>
         <td>{t.clicks}</td>
       </tr>
     ))
@@ -28,8 +31,6 @@ function Table({ teams, loading, error, showExtraTeam, tableClass }) {
     </tr>
   </>
 
-  console.log("Teams exist: ", teams && teams.length > 1)
-
   return (
     <table className={"results " + tableClass}>
       <thead>
@@ -44,7 +45,7 @@ function Table({ teams, loading, error, showExtraTeam, tableClass }) {
 
         {showExtraTeam && <tr style={{background: 'transparent', borderTop: '1px dashed #aaa', color: 'rgba(0,0,0,0.2)'}}>
           <td>{ showExtraTeam.order }</td>
-          <td>{ showExtraTeam.team }</td>
+          <td><Link to={`/${encodeURIComponent(showExtraTeam.team)}`}>{showExtraTeam.team}</Link></td>
           <td>{ showExtraTeam.clicks }</td>
         </tr>}
       </tbody>

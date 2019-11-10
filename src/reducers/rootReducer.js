@@ -1,9 +1,10 @@
+const teamInit = {
+  team: '',
+  clicks: 0
+}
 const initState = {
   teams: [],
-  myTeam: {
-    team: '',
-    clicks: 0
-  },
+  myTeam: teamInit,
   loading: false,
   error: null
 }
@@ -34,7 +35,7 @@ const rootReducer = (state = initState, action) => {
     }
 
     case 'SET_TEAM_NAME': {
-      if (state.teams.length < 1) return { ...state, myTeam: {} }
+      if (state.teams.length < 1) return { ...state, myTeam: teamInit }
       let myTeam = {
         team: action.teamName,
         clicks: 0,
@@ -45,7 +46,6 @@ const rootReducer = (state = initState, action) => {
         myTeam.clicks = existingTeam.clicks
         myTeam.order = existingTeam.order
       }
-      if (action.teamName === '') myTeam = {}
 
       return {
         ...state,

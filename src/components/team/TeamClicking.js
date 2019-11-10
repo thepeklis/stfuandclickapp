@@ -1,7 +1,7 @@
 import React from 'react'
 import Table from '../Table'
 
-function TeamClicking({ myTeam, teams, handleClick, loading, error }) {
+function TeamClicking({ myTeam, teams = [], handleClick, loading, error }) {
 
   function handleBtnClick(e) {
     e.preventDefault()
@@ -58,7 +58,8 @@ function TeamClicking({ myTeam, teams, handleClick, loading, error }) {
         <Table teams={getTeamsAround()}
                tableClass={"team"}
                loading={loading}
-               error={error} />
+               error={error}
+               highlightTeam={myTeam.team}/>
 
         <div className="footer claim">
           <p>Want to be top? STFU and click!</p>
