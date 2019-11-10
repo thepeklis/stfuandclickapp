@@ -25,7 +25,7 @@ export const fetchTeams = (loading = true, teamName = undefined) => dispatch => 
 export const setTeamName = (teamName) => dispatch => {
   dispatch({
     type: 'SET_TEAM_NAME',
-    teamName
+    teamName: teamName
   })
 }
 

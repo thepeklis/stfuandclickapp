@@ -47,8 +47,7 @@ class App extends Component {
 
     const { teams, myTeam, loading, error, setTeamName } = this.props
 
-    console.log("teams from props: ", teams)
-    console.log("myTeam from props: ", myTeam.team)
+    console.log("props: ", this.props)
 
     return (
       <div className="app">
